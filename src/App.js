@@ -10,29 +10,22 @@ function App() {
   const[city, setCity] = useState({})
   const[weather, setWeather] = useState({})
 
-  const Search = evt => {
-      if(evt.key === "Enter"){
-      fetch(`${api.base}weather?q=${city}&appid=${api.key}`)
-      .then(response => response.json())
-      .then(data =>{
-        setWeather(data);
-        setCity("");
-        console.log(data);
-    }).catch(alert("City not found"));
-  }
-}
  
+useEffect(()=>{
+    fetch(`${api.base}weather?q=${city}&appid=${api.key}`)
+    .then(response => response.json())
+    .then(data =>{
+      setWeather(data);
+      setCity("");
+      console.log(data);
+  }).catch(alert("City not found"));
+},[setCity])
+
 return (
   <div className="App">
-    <div className="search-box">
-      <input 
-        type="text"
-        className="search-bar"
-        placeholder="Search city..."
-        onChange={ e => setCity(e.target.value) }
-        onKeyPress={Search }
-        value= {city}/>
-    </div>
+     <form onSubmit={ e => setCity(e.target.value)}>
+          <input type="text" value={city} onChange={e => setCity(e.target.value)} />
+      </form>
     {(typeof weather.main != "undefined") ? (
       <div className="weather-box">
       <div className='location'>{weather.name}</div>
