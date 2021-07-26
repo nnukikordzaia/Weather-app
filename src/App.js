@@ -9,22 +9,28 @@ const api={
 function App() {
   const[city, setCity] = useState({})
   const[weather, setWeather] = useState({})
+  const[input, setInput] = useState('')
 
  
 useEffect(()=>{
+  if(!!city)
     fetch(`${api.base}weather?q=${city}&appid=${api.key}`)
     .then(response => response.json())
     .then(data =>{
       setWeather(data);
-      setCity("");
+      setCity('');
       console.log(data);
-  }).catch(alert("City not found"));
-},[setCity])
+  }).catch(e => console.log(e))
+},[city])
 
 return (
   <div className="App">
-     <form onSubmit={ e => setCity(e.target.value)}>
-          <input type="text" value={city} onChange={e => setCity(e.target.value)} />
+     <form onSubmit={ e => {
+       e.preventDefault()
+       console.log(e)
+       setCity(input)
+    }}>
+          <input type="text" onChange = {(e) => setInput(e.target.value)} />
       </form>
     {(typeof weather.main != "undefined") ? (
       <div className="weather-box">
